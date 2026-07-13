@@ -49,16 +49,18 @@ export default function AuroraBackground() {
       {/* Aurora blobs (CSS drift + GSAP scroll parallax) */}
       <div
         ref={(el) => (blobRefs.current[0] = el)}
-        className="absolute -top-40 -left-40 w-[42rem] h-[42rem] bg-violet/30 rounded-full blur-[120px] animate-blob"
+        className="absolute -top-40 -left-40 w-[42rem] h-[42rem] animate-blob pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%)', willChange: 'transform' }}
       />
       <div
         ref={(el) => (blobRefs.current[1] = el)}
-        className="absolute top-1/3 -right-40 w-[38rem] h-[38rem] bg-cyan/20 rounded-full blur-[120px] animate-blob-slow"
+        className="absolute top-1/3 -right-40 w-[38rem] h-[38rem] animate-blob-slow pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%)', willChange: 'transform' }}
       />
       <div
         ref={(el) => (blobRefs.current[2] = el)}
-        className="absolute bottom-0 left-1/4 w-[34rem] h-[34rem] bg-pink/20 rounded-full blur-[130px] animate-blob"
-        style={{ animationDelay: '4s' }}
+        className="absolute bottom-0 left-1/4 w-[34rem] h-[34rem] animate-blob pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(244, 114, 182, 0.15) 0%, transparent 70%)', animationDelay: '4s', willChange: 'transform' }}
       />
 
       {/* Vignette */}

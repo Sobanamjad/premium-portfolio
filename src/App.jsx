@@ -30,8 +30,7 @@ export default function App() {
   useLenis()
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1400)
-    return () => clearTimeout(timer)
+    setLoading(false)
   }, [])
 
   return (
