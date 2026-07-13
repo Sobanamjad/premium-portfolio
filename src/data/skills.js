@@ -32,6 +32,8 @@ import {
   SiFigma,
   SiFramer,
   SiVite,
+  SiNodedotjs,
+  SiGithubactions,
 } from "react-icons/si";
 
 export const skillCategories = [
