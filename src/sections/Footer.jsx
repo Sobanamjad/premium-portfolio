@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className="relative border-t border-white/[0.06] px-6 sm:px-10 lg:px-20 py-14">
       <div className="container-max flex flex-col items-center gap-8 text-center">
         <a href="#home" className="font-display text-2xl font-semibold tracking-tight text-ink">
-          Alex<span className="gradient-text">.dev</span>
+          Soban<span className="gradient-text">.dev</span>
         </a>
 
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -52,7 +52,7 @@ export default function Footer() {
         </div>
 
         <p className="text-ink-faint text-xs font-mono">
-          © {year} Alex Rivera. Built with React, Tailwind CSS & Framer Motion.
+          © {year} Soban Amjad. Built with React, Tailwind CSS & Framer Motion.
         </p>
       </div>
     </footer>

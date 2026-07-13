@@ -60,7 +60,7 @@ export default function Navbar() {
               }}
               className="font-display text-lg font-semibold tracking-tight text-ink"
             >
-              Alex<span className="gradient-text">.dev</span>
+              Soban<span className="gradient-text">.dev</span>
             </a>
 
             <nav className="hidden lg:flex items-center gap-1">

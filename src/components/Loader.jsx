@@ -13,7 +13,7 @@ export default function Loader() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        Alex Rivera
+        Soban Amjad
       </motion.span>
       <div className="w-40 h-[3px] rounded-full bg-white/10 overflow-hidden">
         <motion.div

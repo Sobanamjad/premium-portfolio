@@ -39,7 +39,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="font-display text-5xl sm:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95]"
         >
-          Hi, I'm <span className="gradient-text">Alex Rivera</span>
+          Hi, I'm <span className="gradient-text">Soban Amjad</span>
         </motion.h1>
 
         <motion.div
