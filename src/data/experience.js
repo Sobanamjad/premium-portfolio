@@ -52,7 +52,7 @@ export const education = [
   {
     id: 2,
     degree: 'Full-Stack Web Development',
-    institution: 'Ace Connet',
+    institution: 'Ace Connect',
     period: '2021',
     description: 'Intensive 16-week program covering modern JavaScript, React, and backend engineering fundamentals.',
   },
