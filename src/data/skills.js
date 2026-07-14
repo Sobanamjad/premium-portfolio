@@ -1,5 +1,4 @@
 import {
-  FiCode,
   FiServer,
   FiDatabase,
   FiCloud,
@@ -9,7 +8,7 @@ import {
 
 import {
   SiHtml5,
-  SiCss3,
+  SiCss,
   SiBootstrap,
   SiJavascript,
   SiTypescript,
@@ -25,8 +24,6 @@ import {
   SiMysql,
   SiPrisma,
   SiDocker,
-  SiGit,
-  SiGithub,
   SiVercel,
   SiPostman,
   SiFigma,
@@ -56,7 +53,7 @@ export const skillCategories = [
   icon: FiLayout,
   skills: [
     { id: 1, name: "HTML5", icon: SiHtml5, level: 98 },
-    { id: 2, name: "CSS3", icon: SiCss3, level: 96 },
+    { id: 2, name: "CSS3", icon: SiCss, level: 96 },
     { id: 3, name: "Bootstrap", icon: SiBootstrap, level: 94 },
     { id: 4, name: "JavaScript", icon: SiJavascript, level: 95 },
     { id: 5, name: "TypeScript", icon: SiTypescript, level: 85 },

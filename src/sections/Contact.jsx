@@ -9,15 +9,15 @@ import { isValidEmail } from '../utils/helpers'
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
 const contactInfo = [
-  { id: 1, icon: FiMail, label: 'Email', value: 'hello@yourdomain.com' },
-  { id: 2, icon: FiPhone, label: 'Phone', value: '+1 (555) 012-3456' },
-  { id: 3, icon: FiMapPin, label: 'Location', value: 'Austin, TX · Remote' },
+  { id: 1, icon: FiMail, label: 'Email', value: 'sobanamjad0@gmail.com' },
+  { id: 2, icon: FiPhone, label: 'Phone', value: '+92 3083996052' },
+  { id: 3, icon: FiMapPin, label: 'Location', value: 'Pakistan, Multan · Remote' },
 ]
 
 export default function Contact() {
   const [form, setForm] = useState(initialForm)
   const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState('idle') // idle | loading | success
+  const [status, setStatus] = useState('idle') 
 
   const validate = () => {
     const next = {}
@@ -40,7 +40,6 @@ export default function Contact() {
     if (!validate()) return
 
     setStatus('loading')
-    // Simulated network request — wire up to your backend / form service here.
     await new Promise((resolve) => setTimeout(resolve, 1600))
     setStatus('success')
     setForm(initialForm)
