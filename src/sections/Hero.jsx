@@ -71,7 +71,7 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.65 }}
           className="flex flex-wrap items-center justify-center gap-4 mt-2"
         >
-          <MagneticButton as="a" href="/resume.pdf" download className="btn-glow">
+          <MagneticButton as="a" href="/soban-resume.pdf" download className="btn-glow">
             <FiDownload /> Download Resume
           </MagneticButton>
           <MagneticButton
