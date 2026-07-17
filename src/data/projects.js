@@ -1,14 +1,19 @@
+import p1 from '../assets/p1.png'
+import p2 from '../assets/p2.png'
+import p3 from '../assets/p3.png'
+
+
 export const projectCategories = ['All', 'Full-Stack', 'Frontend', 'Mobile', 'Open Source']
 
 export const projects = [
   {
     id: 1,
-    title: 'Nimbus Commerce',
-    description: 'A headless e-commerce platform with real-time inventory, Stripe payments, and an admin analytics dashboard built for scale.',
-    tech: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe', 'Redis'],
-    github: 'https://github.com/yourusername/nimbus-commerce',
-    live: 'https://nimbus-commerce.example.com',
-    image: 'https://images.unsplash.com/photo-1557821552-17105176677c?q=80&w=1600&auto=format&fit=crop',
+    title: 'News Magic box',
+    description: 'MagicBox is a modern news aggregation platform that automatically collects and displays news from multiple RSS feeds across various categories. The platform provides users with a seamless reading experience with real-time updates, image optimization, and responsive design',
+    tech: ['Codignator', 'TailwindCss', 'MySQL', 'PHP',],
+    github: 'https://github.com/Sobanamjad/news-magicbox-mg',
+    live: 'https://news.magicbox.mg/',
+    image: p1,
     category: 'Full-Stack',
     status: 'Live',
     featured: true,
@@ -16,12 +21,12 @@ export const projects = [
   },
   {
     id: 2,
-    title: 'Pulse Analytics',
-    description: 'Real-time product analytics suite with custom event pipelines, cohort charts, and a GraphQL API powering live dashboards.',
-    tech: ['React', 'GraphQL', 'NestJS', 'MongoDB', 'D3.js'],
-    github: 'https://github.com/yourusername/pulse-analytics',
-    live: 'https://pulse-analytics.example.com',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop',
+    title: 'University Management System',
+    description: 'UMS is a comprehensive academic administration platform that simplifies university management through role-based dashboards, automated workflows, and real-time data insights.',
+    tech: ['NextJS', 'Payload-cms', 'PostgreSql', 'Neon JS', 'Tailwind css'],
+    github: 'https://github.com/Sobanamjad/University-Management-System',
+    live: 'https://university-management-system-jesiciboq-soban-amjads-projects.vercel.app/',
+    image: p2,
     category: 'Full-Stack',
     status: 'Live',
     featured: true,
