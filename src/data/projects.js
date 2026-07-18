@@ -48,7 +48,7 @@ export const projects = [
     id: 4,
     title: 'Voyage Travel Planner',
     description: 'A collaborative trip-planning app with drag-and-drop itineraries, offline maps, and shared budgets for groups.',
-    tech: ['React Native', 'Firebase', 'Mapbox'],
+    tech: ['Vue3', 'Laravel', 'MySql'],
     github: 'https://github.com/yourusername/voyage',
     live: 'https://voyage.example.com',
     image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1600&auto=format&fit=crop',
