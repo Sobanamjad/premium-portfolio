@@ -1,28 +1,30 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiSend, FiCheck, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
+import { FiSend, FiCheck, FiAlertCircle, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
+import emailjs from '@emailjs/browser'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
 import MagneticButton from '../components/MagneticButton'
 import { isValidEmail } from '../utils/helpers'
+import { EMAILJS_CONFIG } from '../utils/emailjs'
 
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
 const contactInfo = [
-  { id: 1, icon: FiMail, label: 'Email', value: 'sobanamjad0@gmail.com' },
-  { id: 2, icon: FiPhone, label: 'Phone', value: '+92 3083996052' },
-  { id: 3, icon: FiMapPin, label: 'Location', value: 'Pakistan, Multan · Remote' },
+  { id: 1, icon: FiMail,    label: 'Email',    value: 'sobanamjad0@gmail.com'      },
+  { id: 2, icon: FiPhone,   label: 'Phone',    value: '+92 3083996052'              },
+  { id: 3, icon: FiMapPin,  label: 'Location', value: 'Pakistan, Multan · Remote'  },
 ]
 
 export default function Contact() {
-  const [form, setForm] = useState(initialForm)
+  const [form, setForm]     = useState(initialForm)
   const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState('idle') 
+  const [status, setStatus] = useState('idle') // idle | loading | success | error
 
   const validate = () => {
     const next = {}
-    if (!form.name.trim()) next.name = 'Please enter your name.'
-    if (!form.email.trim()) next.email = 'Please enter your email.'
+    if (!form.name.trim())    next.name    = 'Please enter your name.'
+    if (!form.email.trim())   next.email   = 'Please enter your email.'
     else if (!isValidEmail(form.email)) next.email = 'Enter a valid email address.'
     if (!form.message.trim()) next.message = 'Tell me a bit about your project.'
     setErrors(next)
@@ -40,10 +42,27 @@ export default function Contact() {
     if (!validate()) return
 
     setStatus('loading')
-    await new Promise((resolve) => setTimeout(resolve, 1600))
-    setStatus('success')
-    setForm(initialForm)
-    setTimeout(() => setStatus('idle'), 4000)
+    try {
+      await emailjs.send(
+        EMAILJS_CONFIG.serviceId,
+        EMAILJS_CONFIG.templateId,
+        {
+          from_name:  form.name,
+          from_email: form.email,
+          subject:    form.subject || 'No subject',
+          message:    form.message,
+          to_name:    'Soban',
+        },
+        EMAILJS_CONFIG.publicKey
+      )
+      setStatus('success')
+      setForm(initialForm)
+      setTimeout(() => setStatus('idle'), 5000)
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      setStatus('error')
+      setTimeout(() => setStatus('idle'), 5000)
+    }
   }
 
   return (
@@ -56,6 +75,7 @@ export default function Contact() {
         />
 
         <div className="grid lg:grid-cols-5 gap-8">
+          {/* ── Contact info cards ── */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -76,6 +96,7 @@ export default function Contact() {
             ))}
           </motion.div>
 
+          {/* ── Contact form ── */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -135,6 +156,7 @@ export default function Contact() {
                         placeholder="jane@company.com"
                       />
                     </div>
+
                     <Field
                       label="Subject"
                       name="subject"
@@ -142,6 +164,7 @@ export default function Contact() {
                       onChange={handleChange}
                       placeholder="Project inquiry"
                     />
+
                     <div>
                       <label htmlFor="message" className="text-xs font-mono text-ink-muted mb-2 block">
                         Message
@@ -159,6 +182,18 @@ export default function Contact() {
                       />
                       {errors.message && <p className="text-pink text-xs mt-1.5">{errors.message}</p>}
                     </div>
+
+                    {/* Error banner */}
+                    {status === 'error' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-2 text-sm bg-pink/10 border border-pink/20 text-pink rounded-xl px-4 py-3"
+                      >
+                        <FiAlertCircle className="shrink-0" />
+                        Something went wrong. Please try again or email me directly.
+                      </motion.div>
+                    )}
 
                     <MagneticButton
                       type="submit"

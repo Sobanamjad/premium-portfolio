@@ -41,7 +41,7 @@ export const projects = [
     github: 'https://github.com/Sobanamjad/acs-frontend-vue3-soban',
     live: 'https://staging.mivue.io/',
     image: p3,
-    category: 'Full Stacks',
+    category: 'Full-Stack',
     status: 'Live',
     featured: true,
     year: 2024,
