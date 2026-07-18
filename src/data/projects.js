@@ -24,7 +24,7 @@ export const projects = [
     id: 2,
     title: 'University Management System',
     description: 'UMS is a comprehensive academic administration platform that simplifies university management through role-based dashboards, automated workflows, and real-time data insights.',
-    tech: ['NextJS', 'Payload-cms', 'PostgreSql', 'tailwind css',],
+    tech: ['NextJS', 'PayloadCms', 'PostgreSql', 'TailwindCss',],
     github: 'https://github.com/Sobanamjad/University-Management-System',
     live: 'https://university-management-system-jesiciboq-soban-amjads-projects.vercel.app/',
     image: p2,
