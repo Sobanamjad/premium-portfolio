@@ -4,7 +4,6 @@ import p3 from '../assets/p3.png'
 import p4 from '../assets/p4.png'
 
 
-
 export const projectCategories = ['All', 'Full-Stack', 'Frontend', 'Mobile', 'Open Source']
 
 export const projects = [
@@ -25,7 +24,7 @@ export const projects = [
     id: 2,
     title: 'University Management System',
     description: 'UMS is a comprehensive academic administration platform that simplifies university management through role-based dashboards, automated workflows, and real-time data insights.',
-    tech: ['NextJS', 'Payload-cms', 'PostgreSql', 'Tailwind css'],
+    tech: ['NextJS', 'Payload-cms', 'PostgreSql', 'tailwind css',],
     github: 'https://github.com/Sobanamjad/University-Management-System',
     live: 'https://university-management-system-jesiciboq-soban-amjads-projects.vercel.app/',
     image: p2,
