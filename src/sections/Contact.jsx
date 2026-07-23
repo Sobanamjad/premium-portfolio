@@ -11,7 +11,7 @@ import { EMAILJS_CONFIG } from '../utils/emailjs'
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
 const contactInfo = [
-  { id: 1, icon: FiMail,    label: 'Email',    value: 'sobanamjad0@gmail.com'      },
+  { id: 1, icon: FiMail,    label: 'Email',    value: 'sobanamjad097@gmail.com'      },
   { id: 2, icon: FiPhone,   label: 'Phone',    value: '+92 3083996052'              },
   { id: 3, icon: FiMapPin,  label: 'Location', value: 'Pakistan, Multan · Remote'  },
 ]
