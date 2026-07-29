@@ -13,7 +13,7 @@ export default function About() {
         <SectionHeading
           eyebrow="About Me"
           title="Building products with craft and curiosity"
-          subtitle="I'm a senior full-stack developer with 6+ years of experience turning ambitious ideas into fast, reliable, and beautifully-crafted software."
+          subtitle="I'm a senior full-stack developer with 3+ years of experience turning ambitious ideas into fast, reliable, and beautifully-crafted software."
         />
 
         <div className="grid lg:grid-cols-2 gap-10 items-start">

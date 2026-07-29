@@ -62,7 +62,7 @@ export default function Hero() {
         >
           I design and build fast, accessible, and visually refined products —
           from database schema to the pixel on screen. Currently crafting
-          scalable web platforms at Nova Digital Labs.
+          scalable web platforms at HiBitTech.
         </motion.p>
 
         <motion.div
