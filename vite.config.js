@@ -59,8 +59,16 @@ export default defineConfig({
         // GET /api/experience
         server.middlewares.use('/api/experience', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
-          res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Content-Type': 'application/json')
           const { default: handler } = await import('./api/experience.js')
+          await handler(req, res)
+        })
+
+        // GET /api/about
+        server.middlewares.use('/api/about', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type': 'application/json')
+          const { default: handler } = await import('./api/about.js')
           await handler(req, res)
         })
 
@@ -121,11 +129,20 @@ export default defineConfig({
         // GET/POST/PUT/DELETE /api/admin/experience
         server.middlewares.use('/api/admin/experience', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
-          res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Content-Type': 'application/json')
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
           const { default: handler } = await import('./api/admin/experience.js')
+          await handler(req, res)
+        })
+
+        // GET/POST/PUT /api/admin/about
+        server.middlewares.use('/api/admin/about', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type': 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/admin/about.js')
           await handler(req, res)
         })
 
@@ -159,9 +176,18 @@ export default defineConfig({
         // POST /api/admin/seed-experience
         server.middlewares.use('/api/admin/seed-experience', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
-          res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Content-Type': 'application/json')
           req.body = await parseBody(req)
           const { default: handler } = await import('./api/admin/seed-experience.js')
+          await handler(req, res)
+        })
+
+        // POST /api/admin/seed-about
+        server.middlewares.use('/api/admin/seed-about', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type': 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/admin/seed-about.js')
           await handler(req, res)
         })
       },

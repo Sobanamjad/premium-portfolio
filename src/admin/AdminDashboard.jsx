@@ -9,6 +9,7 @@ import SkillsManager from './SkillsManager'
 import ServicesManager from './ServicesManager'
 import ProjectsManager from './ProjectsManager'
 import ExperienceManager from './ExperienceManager'
+import AboutManager from './AboutManager'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleString('en-US', {
@@ -24,6 +25,7 @@ export default function AdminDashboard({ token, onLogout }) {
   const [services, setServices] = useState([])
   const [projects, setProjects] = useState([])
   const [experience, setExperience] = useState([])
+  const [about, setAbout] = useState(null)
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
   const [search, setSearch]     = useState('')
@@ -128,12 +130,32 @@ export default function AdminDashboard({ token, onLogout }) {
     }
   }
 
+  const fetchAbout = async (silent = false) => {
+    if (!silent) setLoading(true)
+    else setRefreshing(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/about', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401) { onLogout(); return }
+      const data = await res.json()
+      setAbout(data.about || null)
+    } catch {
+      setError('Failed to load about.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
   useEffect(() => {
     if (activeTab === 'contacts') fetchContacts()
     else if (activeTab === 'skills') fetchSkills()
     else if (activeTab === 'services') fetchServices()
     else if (activeTab === 'projects') fetchProjects()
     else if (activeTab === 'experience') fetchExperience()
+    else if (activeTab === 'about') fetchAbout()
   }, [activeTab])
 
   const handleDelete = async (id) => {
@@ -396,6 +418,40 @@ export default function AdminDashboard({ token, onLogout }) {
     }
   }
 
+  const handleUpdateAbout = async (aboutData) => {
+    try {
+      const res = await fetch('/api/admin/about', {
+        method: aboutData.id ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(aboutData),
+      })
+      if (res.ok) {
+        fetchAbout(true)
+      }
+    } catch {
+      alert('Failed to update about.')
+    }
+  }
+
+  const handleSeedAbout = async () => {
+    try {
+      const res = await fetch('/api/admin/seed-about', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message)
+        fetchAbout(true)
+      }
+    } catch {
+      alert('Failed to seed about.')
+    }
+  }
+
   const filtered = contacts.filter(c =>
     [c.name, c.email, c.subject, c.message]
       .join(' ').toLowerCase()
@@ -485,6 +541,16 @@ export default function AdminDashboard({ token, onLogout }) {
               }`}
             >
               Experience
+            </button>
+            <button
+              onClick={() => setActiveTab('about')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'about'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              About
             </button>
           </div>
         </div>
@@ -707,6 +773,17 @@ export default function AdminDashboard({ token, onLogout }) {
             onEdit={handleEditExperience}
             onDelete={handleDeleteExperience}
             onSeed={handleSeedExperience}
+          />
+        )}
+
+        {activeTab === 'about' && (
+          <AboutManager
+            about={about}
+            loading={loading}
+            error={error}
+            onRefresh={() => fetchAbout(true)}
+            onUpdate={handleUpdateAbout}
+            onSeed={handleSeedAbout}
           />
         )}
       </main>
