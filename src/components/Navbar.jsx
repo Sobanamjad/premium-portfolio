@@ -16,21 +16,28 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const sections = navLinks
-      .map((link) => document.querySelector(link.href))
-      .filter(Boolean)
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`)
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 100
+      const sections = navLinks
+        .map((link) => {
+          const section = document.querySelector(link.href)
+          if (!section) return null
+          const { offsetTop, offsetHeight } = section
+          return { id: link.href, offsetTop, offsetHeight }
         })
-      },
-      { rootMargin: '-45% 0px -45% 0px' }
-    )
+        .filter(Boolean)
 
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
+      for (const section of sections) {
+        if (scrollPosition >= section.offsetTop && scrollPosition < section.offsetTop + section.offsetHeight) {
+          setActive(section.id)
+          break
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial check
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const handleNavClick = (href) => {
