@@ -32,6 +32,22 @@ export default defineConfig({
           await handler(req, res)
         })
 
+        // GET /api/skills
+        server.middlewares.use('/api/skills', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          const { default: handler } = await import('./api/skills.js')
+          await handler(req, res)
+        })
+
+        // GET /api/services
+        server.middlewares.use('/api/services', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          const { default: handler } = await import('./api/services.js')
+          await handler(req, res)
+        })
+
         // POST /api/admin/login
         server.middlewares.use('/api/admin/login', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
@@ -50,6 +66,46 @@ export default defineConfig({
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
           const { default: handler } = await import('./api/admin/contacts.js')
+          await handler(req, res)
+        })
+
+        // GET/POST/PUT/DELETE /api/admin/skills
+        server.middlewares.use('/api/admin/skills', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const url = new URL(req.url, 'http://localhost')
+          req.query = Object.fromEntries(url.searchParams.entries())
+          const { default: handler } = await import('./api/admin/skills.js')
+          await handler(req, res)
+        })
+
+        // GET/POST/PUT/DELETE /api/admin/services
+        server.middlewares.use('/api/admin/services', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const url = new URL(req.url, 'http://localhost')
+          req.query = Object.fromEntries(url.searchParams.entries())
+          const { default: handler } = await import('./api/admin/services.js')
+          await handler(req, res)
+        })
+
+        // POST /api/admin/seed-skills
+        server.middlewares.use('/api/admin/seed-skills', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/admin/seed-skills.js')
+          await handler(req, res)
+        })
+
+        // POST /api/admin/seed-services
+        server.middlewares.use('/api/admin/seed-services', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/admin/seed-services.js')
           await handler(req, res)
         })
       },

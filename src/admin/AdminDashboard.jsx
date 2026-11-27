@@ -5,6 +5,8 @@ import {
   FiTrash2, FiRefreshCw, FiSearch, FiChevronDown, FiChevronUp,
   FiAlertCircle, FiInbox
 } from 'react-icons/fi'
+import SkillsManager from './SkillsManager'
+import ServicesManager from './ServicesManager'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleString('en-US', {
@@ -14,13 +16,18 @@ function formatDate(iso) {
 }
 
 export default function AdminDashboard({ token, onLogout }) {
+  const [activeTab, setActiveTab] = useState('contacts')
   const [contacts, setContacts] = useState([])
+  const [skills, setSkills] = useState([])
+  const [services, setServices] = useState([])
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
   const [search, setSearch]     = useState('')
   const [expanded, setExpanded] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [editingItem, setEditingItem] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const fetchContacts = async (silent = false) => {
     if (!silent) setLoading(true)
@@ -41,7 +48,49 @@ export default function AdminDashboard({ token, onLogout }) {
     }
   }
 
-  useEffect(() => { fetchContacts() }, [])
+  const fetchSkills = async (silent = false) => {
+    if (!silent) setLoading(true)
+    else setRefreshing(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/skills', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401) { onLogout(); return }
+      const data = await res.json()
+      setSkills(data.skills || [])
+    } catch {
+      setError('Failed to load skills.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  const fetchServices = async (silent = false) => {
+    if (!silent) setLoading(true)
+    else setRefreshing(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/services', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401) { onLogout(); return }
+      const data = await res.json()
+      setServices(data.services || [])
+    } catch {
+      setError('Failed to load services.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  useEffect(() => {
+    if (activeTab === 'contacts') fetchContacts()
+    else if (activeTab === 'skills') fetchSkills()
+    else if (activeTab === 'services') fetchServices()
+  }, [activeTab])
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this message?')) return
@@ -56,6 +105,120 @@ export default function AdminDashboard({ token, onLogout }) {
       alert('Delete failed.')
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const handleAddSkill = async (skill) => {
+    try {
+      const res = await fetch('/api/admin/skills', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(skill),
+      })
+      if (res.ok) {
+        fetchSkills(true)
+      }
+    } catch {
+      alert('Failed to add skill.')
+    }
+  }
+
+  const handleEditSkill = async (skill) => {
+    try {
+      const res = await fetch('/api/admin/skills', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(skill),
+      })
+      if (res.ok) {
+        fetchSkills(true)
+      }
+    } catch {
+      alert('Failed to update skill.')
+    }
+  }
+
+  const handleDeleteSkill = async (id) => {
+    if (!window.confirm('Delete this skill?')) return
+    try {
+      const res = await fetch(`/api/admin/skills?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setSkills(s => s.filter(x => x.id !== id))
+    } catch {
+      alert('Delete failed.')
+    }
+  }
+
+  const handleSeedSkills = async () => {
+    try {
+      const res = await fetch('/api/admin/seed-skills', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message)
+        fetchSkills(true)
+      }
+    } catch {
+      alert('Failed to seed skills.')
+    }
+  }
+
+  const handleAddService = async (service) => {
+    try {
+      const res = await fetch('/api/admin/services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(service),
+      })
+      if (res.ok) {
+        fetchServices(true)
+      }
+    } catch {
+      alert('Failed to add service.')
+    }
+  }
+
+  const handleEditService = async (service) => {
+    try {
+      const res = await fetch('/api/admin/services', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(service),
+      })
+      if (res.ok) {
+        fetchServices(true)
+      }
+    } catch {
+      alert('Failed to update service.')
+    }
+  }
+
+  const handleDeleteService = async (id) => {
+    if (!window.confirm('Delete this service?')) return
+    try {
+      const res = await fetch(`/api/admin/services?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setServices(s => s.filter(x => x.id !== id))
+    } catch {
+      alert('Delete failed.')
     }
   }
 
@@ -95,66 +258,107 @@ export default function AdminDashboard({ token, onLogout }) {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-white border border-gray-200 rounded-2xl p-6 flex items-center gap-4 shadow-md hover:shadow-lg transition-shadow"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white text-lg shrink-0 shadow-md">
-                <s.icon />
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-gray-900">{s.value}</p>
-                <p className="text-sm text-gray-500 mt-0.5">{s.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Contact Messages</h2>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            {/* Search */}
-            <div className="relative flex-1 sm:flex-none">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search messages..."
-                className="w-full sm:w-64 bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition-all"
-              />
-            </div>
-            {/* Refresh */}
+      {/* Tabs */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8">
+          <div className="flex gap-1">
             <button
-              onClick={() => fetchContacts(true)}
-              disabled={refreshing}
-              className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all disabled:opacity-50 shadow-sm"
+              onClick={() => setActiveTab('contacts')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'contacts'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              <motion.span
-                animate={refreshing ? { rotate: 360 } : {}}
-                transition={{ duration: 0.7, repeat: refreshing ? Infinity : 0, ease: 'linear' }}
-                className="block"
-              >
-                <FiRefreshCw className="text-base" />
-              </motion.span>
+              Contacts
+            </button>
+            <button
+              onClick={() => setActiveTab('skills')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'skills'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Skills
+            </button>
+            <button
+              onClick={() => setActiveTab('services')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'services'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Services
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Error */}
-        {error && (
-          <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-6">
-            <FiAlertCircle /> {error}
-          </div>
-        )}
+      <main className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
+        {/* Conditional content based on active tab */}
+        {activeTab === 'contacts' && (
+          <>
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+              {stats.map((s, i) => (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-white border border-gray-200 rounded-2xl p-6 flex items-center gap-4 shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white text-lg shrink-0 shadow-md">
+                    <s.icon />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold text-gray-900">{s.value}</p>
+                    <p className="text-sm text-gray-500 mt-0.5">{s.label}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Toolbar */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Contact Messages</h2>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                {/* Search */}
+                <div className="relative flex-1 sm:flex-none">
+                  <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    placeholder="Search messages..."
+                    className="w-full sm:w-64 bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition-all"
+                  />
+                </div>
+                {/* Refresh */}
+                <button
+                  onClick={() => fetchContacts(true)}
+                  disabled={refreshing}
+                  className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all disabled:opacity-50 shadow-sm"
+                >
+                  <motion.span
+                    animate={refreshing ? { rotate: 360 } : {}}
+                    transition={{ duration: 0.7, repeat: refreshing ? Infinity : 0, ease: 'linear' }}
+                    className="block"
+                  >
+                    <FiRefreshCw className="text-base" />
+                  </motion.span>
+                </button>
+              </div>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 mb-6">
+                <FiAlertCircle /> {error}
+              </div>
+            )}
 
         {/* Loading */}
         {loading ? (
@@ -257,6 +461,33 @@ export default function AdminDashboard({ token, onLogout }) {
               ))}
             </AnimatePresence>
           </div>
+        )}
+          </>
+        )}
+
+        {activeTab === 'skills' && (
+          <SkillsManager
+            skills={skills}
+            loading={loading}
+            error={error}
+            onRefresh={() => fetchSkills(true)}
+            onAdd={handleAddSkill}
+            onEdit={handleEditSkill}
+            onDelete={handleDeleteSkill}
+            onSeed={handleSeedSkills}
+          />
+        )}
+
+        {activeTab === 'services' && (
+          <ServicesManager
+            services={services}
+            loading={loading}
+            error={error}
+            onRefresh={() => fetchServices(true)}
+            onAdd={handleAddService}
+            onEdit={handleEditService}
+            onDelete={handleDeleteService}
+          />
         )}
       </main>
     </div>

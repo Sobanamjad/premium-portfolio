@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { FiGithub, FiExternalLink, FiStar } from 'react-icons/fi'
 import TiltCard from './TiltCard'
+import { forwardRef } from 'react'
 
 const statusStyles = {
   Live: 'bg-emerald-400/15 text-emerald-300 border-emerald-400/30',
@@ -8,11 +9,12 @@ const statusStyles = {
   Maintained: 'bg-sky-400/15 text-sky-300 border-sky-400/30',
 }
 
-export default function ProjectCard({ project, index = 0 }) {
+const ProjectCard = forwardRef(function ProjectCard({ project, index = 0 }, ref) {
   const { title, description, tech, github, live, image, category, status, featured } = project
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
@@ -85,4 +87,6 @@ export default function ProjectCard({ project, index = 0 }) {
       </TiltCard>
     </motion.div>
   )
-}
+})
+
+export default ProjectCard

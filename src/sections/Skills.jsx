@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiSearch } from 'react-icons/fi'
+import { FiSearch, FiLayout, FiServer, FiTool } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
 import Marquee from '../components/Marquee'
-import { skillCategories, coreLanguages } from '../data/skills'
+import { skillCategories, coreLanguages, fetchSkills, getSkillIcon } from '../data/skills'
 
 function SkillBar({ level, delay = 0 }) {
   return (
@@ -21,16 +21,50 @@ function SkillBar({ level, delay = 0 }) {
 }
 
 export default function Skills() {
-  const [activeCategory, setActiveCategory] = useState(skillCategories[0].id)
+  const [skillsData, setSkillsData] = useState([])
+  const [activeCategory, setActiveCategory] = useState('all')
   const [query, setQuery] = useState('')
 
+  useEffect(() => {
+    fetchSkills().then(data => {
+      if (data.length > 0) {
+        setSkillsData(data)
+      }
+    })
+  }, [])
+
+  const groupedSkills = useMemo(() => {
+    const groups = {}
+    skillsData.forEach(skill => {
+      const normalizedCategory = skill.category.toLowerCase()
+      if (!groups[normalizedCategory]) {
+        groups[normalizedCategory] = []
+      }
+      groups[normalizedCategory].push({ ...skill, icon: getSkillIcon(skill.name) })
+    })
+    return groups
+  }, [skillsData])
+
   const activeSkills = useMemo(() => {
-    const category = skillCategories.find((c) => c.id === activeCategory)
-    if (!category) return []
-    return category.skills.filter((s) =>
+    const skills = activeCategory === 'all'
+      ? Object.values(groupedSkills).flat()
+      : (groupedSkills[activeCategory] || [])
+    return skills.filter((s) =>
       s.name.toLowerCase().includes(query.trim().toLowerCase())
     )
-  }, [activeCategory, query])
+  }, [activeCategory, query, groupedSkills])
+
+  const categories = useMemo(() => {
+    const cats = Object.keys(groupedSkills)
+    return [
+      { id: 'all', label: 'All', icon: FiTool },
+      ...cats.map((cat, idx) => ({
+        id: cat,
+        label: cat.charAt(0).toUpperCase() + cat.slice(1),
+        icon: idx === 0 ? FiLayout : idx === 1 ? FiServer : FiTool
+      }))
+    ]
+  }, [groupedSkills])
 
   return (
     <section id="skills" className="section-pad relative">
@@ -54,7 +88,26 @@ export default function Skills() {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
           <div className="flex flex-wrap gap-2">
-            {skillCategories.map((cat) => (
+            {categories.length > 0 ? categories.map((cat) => (
+              <button
+                key={cat.id}
+                data-cursor="link"
+                onClick={() => setActiveCategory(cat.id)}
+                className={`relative flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors ${
+                  activeCategory === cat.id ? 'text-void' : 'text-ink-muted hover:text-ink'
+                }`}
+              >
+                {activeCategory === cat.id && (
+                  <motion.span
+                    layoutId="skills-pill"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-violet to-cyan"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <cat.icon className="relative z-10" />
+                <span className="relative z-10">{cat.label}</span>
+              </button>
+            )) : skillCategories.map((cat) => (
               <button
                 key={cat.id}
                 data-cursor="link"

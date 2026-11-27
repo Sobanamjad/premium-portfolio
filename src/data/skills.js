@@ -39,20 +39,61 @@ import {
   SiFastapi,
 } from "react-icons/si";
 
+// Icon mapping for skills
+const iconMap = {
+  'HTML5': SiHtml5,
+  'CSS3': SiCss,
+  'Bootstrap': SiBootstrap,
+  'JavaScript': SiJavascript,
+  'TypeScript': SiTypescript,
+  'React': SiReact,
+  'Next.js': SiNextdotjs,
+  'Vue.js': SiVuedotjs,
+  'Tailwind CSS': SiTailwindcss,
+  'PHP': SiPhp,
+  'Laravel': SiLaravel,
+  'CodeIgniter': SiCodeigniter,
+  'Payload CMS': SiPayloadcms,
+  'Node.js': SiNodedotjs,
+  'PostgreSQL': SiPostgresql,
+  'MySQL': SiMysql,
+  'Prisma': SiPrisma,
+  'Docker': SiDocker,
+  'Vercel': SiVercel,
+  'Postman': SiPostman,
+  'Figma': SiFigma,
+  'Framer Motion': SiFramer,
+  'Vite': SiVite,
+  'GitHub Actions': SiGithubactions,
+  'Python': SiPython,
+  'Pandas': SiPandas,
+  'NumPy': SiNumpy,
+  'Scikit-learn': SiScikitlearn,
+  'FastAPI': SiFastapi,
+}
+
+export const getSkillIcon = (name) => {
+  // Try exact match first
+  if (iconMap[name]) return iconMap[name]
+  // Try case-insensitive match
+  const key = Object.keys(iconMap).find(k => k.toLowerCase() === name.toLowerCase())
+  return key ? iconMap[key] : SiJavascript
+}
+
+// Fetch skills from API
+export async function fetchSkills() {
+  try {
+    const res = await fetch('/api/skills')
+    const data = await res.json()
+    return data.skills || []
+  } catch (err) {
+    console.error('Failed to fetch skills:', err)
+    return []
+  }
+}
+
+// Fallback static data
 export const skillCategories = [
-  // {
-  //   id: 'frontend',
-  //   label: 'Frontend',
-  //   icon: FiLayout,
-  //   skills: [
-  //     { id: 1, name: 'React', icon: SiReact, level: 96 },
-  //     { id: 2, name: 'Next.js', icon: SiNextdotjs, level: 92 },
-  //     { id: 3, name: 'TypeScript', icon: SiTypescript, level: 90 },
-  //     { id: 4, name: 'JavaScript (ES6+)', icon: SiJavascript, level: 95 },
-  //     { id: 5, name: 'Tailwind CSS', icon: SiTailwindcss, level: 94 },
-  //     { id: 6, name: 'Redux Toolkit', icon: SiRedux, level: 85 },
-  //   ],
-  // },
   {
   id: "frontend",
   label: "Frontend",
@@ -69,19 +110,6 @@ export const skillCategories = [
     { id: 9, name: "Tailwind CSS", icon: SiTailwindcss, level: 95 },
   ],
   },
-  // {
-  //   id: 'backend',
-  //   label: 'Backend',
-  //   icon: FiServer,
-  //   skills: [
-  //     { id: 7, name: 'Node.js', icon: SiNodedotjs, level: 93 },
-  //     { id: 8, name: 'Express', icon: SiExpress, level: 90 },
-  //     { id: 9, name: 'NestJS', icon: SiNestjs, level: 82 },
-  //     { id: 10, name: 'Python', icon: SiPython, level: 80 },
-  //     { id: 11, name: 'Django', icon: SiDjango, level: 75 },
-  //     { id: 12, name: 'GraphQL', icon: SiGraphql, level: 84 },
-  //   ],
-  // },
   {
   id: "backend",
   label: "Backend",

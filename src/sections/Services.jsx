@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiChevronDown } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
 import TiltCard from '../components/TiltCard'
-import { services } from '../data/services'
+import { services, fetchServices, getServiceIcon } from '../data/services'
 
 export default function Services() {
+  const [servicesData, setServicesData] = useState([])
   const [expanded, setExpanded] = useState(null)
+
+  useEffect(() => {
+    fetchServices().then(data => {
+      if (data.length > 0) {
+        setServicesData(data.map(s => ({ ...s, icon: getServiceIcon(s.title) })))
+      }
+    })
+  }, [])
+
+  const displayServices = servicesData.length > 0 ? servicesData : services
 
   return (
     <section id="services" className="section-pad relative">
@@ -19,7 +30,7 @@ export default function Services() {
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map(({ id, icon: Icon, title, description, features }, i) => {
+          {displayServices.map(({ id, icon: Icon, title, description, features }, i) => {
             const isOpen = expanded === id
             return (
               <motion.div

@@ -1,5 +1,32 @@
 import { FiCode, FiLayers, FiSmartphone, FiCloudLightning, FiPenTool, FiTrendingUp } from 'react-icons/fi'
 
+// Icon mapping for services
+const iconMap = {
+  'Full-Stack Development': FiCode,
+  'Frontend Engineering': FiLayers,
+  'Mobile App Development': FiSmartphone,
+  'Cloud & DevOps': FiCloudLightning,
+  'UI/UX Consulting': FiPenTool,
+  'Performance Audits': FiTrendingUp,
+}
+
+export const getServiceIcon = (title) => {
+  return iconMap[title] || FiCode
+}
+
+// Fetch services from API
+export async function fetchServices() {
+  try {
+    const res = await fetch('/api/services')
+    const data = await res.json()
+    return data.services || []
+  } catch (err) {
+    console.error('Failed to fetch services:', err)
+    return []
+  }
+}
+
+// Fallback static data
 export const services = [
   {
     id: 1,
