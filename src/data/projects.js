@@ -4,7 +4,7 @@ import p3 from '../assets/p3.png'
 import p4 from '../assets/p4.png'
 
 
-export const projectCategories = ['All', 'Full-Stack', 'Frontend', 'Mobile', 'Open Source']
+export const projectCategories = ['All', 'Full-Stack', 'Frontend', 'Mobile', 'Open Source', 'Data & ML']
 
 export const projects = [
   {
@@ -109,5 +109,65 @@ export const projects = [
     status: 'Live',
     featured: false,
     year: 2022,
+  },
+  {
+    id: 9,
+    title: 'Political Sentiment Analyser',
+    description: 'End-to-end sentiment analysis system for classifying political text — Python/Scikit-learn NLP model on the backend with a Next.js frontend. Currently training and evaluating the model.',
+    tech: ['Python', 'Scikit-learn', 'Next.js', 'NLP', 'Pandas'],
+    github: 'https://github.com/Sobanamjad',
+    image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1600&auto=format&fit=crop',
+    category: 'Data & ML',
+    status: 'In Progress',
+    featured: true,
+    year: 2025,
+  },
+  {
+    id: 10,
+    title: 'Sales Prediction Model',
+    description: 'Sales forecasting model covering data cleaning, feature preparation and model evaluation. Built with Python, Pandas, NumPy and Scikit-learn.',
+    tech: ['Python', 'Pandas', 'NumPy', 'Scikit-learn'],
+    github: 'https://github.com/Sobanamjad',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop',
+    category: 'Data & ML',
+    status: 'Live',
+    featured: false,
+    year: 2024,
+  },
+  {
+    id: 11,
+    title: 'Price Prediction Model',
+    description: 'Price prediction model built with Python, Pandas, NumPy and Scikit-learn. Serialized with Pickle and served through a FastAPI endpoint.',
+    tech: ['Python', 'Pandas', 'Scikit-learn', 'FastAPI', 'Pickle'],
+    github: 'https://github.com/Sobanamjad',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1600&auto=format&fit=crop',
+    category: 'Data & ML',
+    status: 'Live',
+    featured: false,
+    year: 2024,
+  },
+  {
+    id: 12,
+    title: 'Kiwanis Club System',
+    description: 'Club management system built for a Chinese client — member records, event management, and reporting — with a Laravel/MySQL backend and React frontend.',
+    tech: ['Laravel', 'MySQL', 'React'],
+    github: 'https://github.com/Sobanamjad',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1600&auto=format&fit=crop',
+    category: 'Full-Stack',
+    status: 'Live',
+    featured: false,
+    year: 2024,
+  },
+  {
+    id: 14,
+    title: 'Customer Churn Prediction',
+    description: 'End-to-end churn prediction pipeline built with Logistic Regression. Loads and preprocesses telecom customer data, applies Label Encoding on categorical columns, scales features with StandardScaler, and trains a binary classifier (Churn vs Not Churn). The trained model, scaler, and encoders are serialized via joblib so new predictions can be made without retraining. Includes a reusable predict() function that encodes, scales, and classifies a new customer record in three steps.',
+    tech: ['Python', 'Pandas', 'Scikit-learn', 'Logistic Regression', 'Joblib', 'Pickle'],
+    github: 'https://github.com/Sobanamjad/Python-learing/tree/develop/train-models/Logistic-Regression',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop',
+    category: 'Data & ML',
+    status: 'Live',
+    featured: true,
+    year: 2025,
   },
 ]

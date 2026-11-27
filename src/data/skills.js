@@ -4,6 +4,7 @@ import {
   FiCloud,
   FiLayout,
   FiTool,
+  FiCpu,
 } from "react-icons/fi";
 
 import {
@@ -31,6 +32,11 @@ import {
   SiVite,
   SiNodedotjs,
   SiGithubactions,
+  SiPython,
+  SiPandas,
+  SiNumpy,
+  SiScikitlearn,
+  SiFastapi,
 } from "react-icons/si";
 
 export const skillCategories = [
@@ -117,6 +123,18 @@ export const skillCategories = [
       { id: 22, name: 'Framer Motion', icon: SiFramer, level: 90 },
       { id: 23, name: 'Vite', icon: SiVite, level: 93 },
       { id: 24, name: "Postman", icon: SiPostman, level: 92 },
+    ],
+  },
+  {
+    id: 'data',
+    label: 'Data & ML',
+    icon: FiCpu,
+    skills: [
+      { id: 25, name: 'Python', icon: SiPython, level: 85 },
+      { id: 26, name: 'Pandas', icon: SiPandas, level: 82 },
+      { id: 27, name: 'NumPy', icon: SiNumpy, level: 80 },
+      { id: 28, name: 'Scikit-learn', icon: SiScikitlearn, level: 78 },
+      { id: 29, name: 'FastAPI', icon: SiFastapi, level: 80 },
     ],
   },
 ]

@@ -7,8 +7,24 @@ export const certificates = [
     credentialUrl: '#',
     image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop',
   },
+  {
+    id: 2,
+    title: 'Data Scientist',
+    issuer: 'Ace Connect',
+    date: '2023',
+    credentialUrl: '#',
+    image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop',
+  },
+  {
+    id: 3,
+    title: 'Experience Certificate',
+    issuer: 'Next Codify',
+    date: 'Sep 2025',
+    credentialUrl: '#',
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+  },
   // {
-  //   id: 2,
+  //   id: 4,
   //   title: 'Professional Cloud Developer',
   //   issuer: 'Google Cloud',
   //   date: 'Feb 2024',
@@ -16,7 +32,7 @@ export const certificates = [
   //   image: 'https://images.unsplash.com/photo-1516110833967-0b5716ca1387?q=80&w=800&auto=format&fit=crop',
   // },
   // {
-  //   id: 3,
+  //   id: 5,
   //   title: 'Meta Advanced React',
   //   issuer: 'Meta (Coursera)',
   //   date: 'Sep 2023',
@@ -24,7 +40,7 @@ export const certificates = [
   //   image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
   // },
   // {
-  //   id: 4,
+  //   id: 6,
   //   title: 'Certified Kubernetes Administrator',
   //   issuer: 'Cloud Native Computing Foundation',
   //   date: 'Nov 2022',
