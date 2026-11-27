@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import AdminLogin from './AdminLogin'
 import AdminDashboard from './AdminDashboard'
+import AdminCursor from '../components/AdminCursor'
 
 export default function AdminApp() {
   const [token, setToken] = useState(() => sessionStorage.getItem('admin_token') || '')
@@ -11,6 +12,10 @@ export default function AdminApp() {
     setToken('')
   }
 
-  if (!token) return <AdminLogin onLogin={handleLogin} />
-  return <AdminDashboard token={token} onLogout={handleLogout} />
+  return (
+    <>
+      <AdminCursor />
+      {token ? <AdminDashboard token={token} onLogout={handleLogout} /> : <AdminLogin onLogin={handleLogin} />}
+    </>
+  )
 }

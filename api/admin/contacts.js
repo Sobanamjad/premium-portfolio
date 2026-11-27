@@ -21,10 +21,14 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, DELETE, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200)
+    return res.end()
+  }
 
   if (!verifyToken(req)) {
-    return res.status(401).json({ error: 'Unauthorized' })
+    res.writeHead(401, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Unauthorized' }))
   }
 
   try {
@@ -35,20 +39,27 @@ export default async function handler(req, res) {
         FROM contacts
         ORDER BY created_at DESC
       `
-      return res.status(200).json({ contacts })
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      return res.end(JSON.stringify({ contacts }))
     }
 
     // DELETE — delete single contact by id (?id=x)
     if (req.method === 'DELETE') {
       const id = req.query?.id || new URL(req.url, 'http://x').searchParams.get('id')
-      if (!id) return res.status(400).json({ error: 'id required' })
+      if (!id) {
+        res.writeHead(400, { 'Content-Type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'id required' }))
+      }
       await sql`DELETE FROM contacts WHERE id = ${id}`
-      return res.status(200).json({ success: true })
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      return res.end(JSON.stringify({ success: true }))
     }
 
-    return res.status(405).json({ error: 'Method not allowed' })
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Method not allowed' }))
   } catch (err) {
     console.error('Admin contacts error:', err)
-    return res.status(500).json({ error: 'Server error' })
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Server error' }))
   }
 }

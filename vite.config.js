@@ -1,5 +1,9 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import dotenv from 'dotenv'
+
+// Load .env file manually
+dotenv.config()
 
 // Helper: parse JSON body from an incoming Node request
 function parseBody(req) {
@@ -19,13 +23,12 @@ export default defineConfig({
     {
       name: 'api-dev-server',
       configureServer(server) {
-
         // POST /api/contact
         server.middlewares.use('/api/contact', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/contact.js?t=' + Date.now())
+          const { default: handler } = await import('./api/contact.js')
           await handler(req, res)
         })
 
@@ -34,7 +37,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/login.js?t=' + Date.now())
+          const { default: handler } = await import('./api/admin/login.js')
           await handler(req, res)
         })
 
@@ -46,7 +49,7 @@ export default defineConfig({
           // Parse query string for DELETE ?id=x
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/contacts.js?t=' + Date.now())
+          const { default: handler } = await import('./api/admin/contacts.js')
           await handler(req, res)
         })
       },

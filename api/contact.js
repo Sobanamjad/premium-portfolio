@@ -22,14 +22,21 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' })
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200)
+    return res.end()
+  }
+  if (req.method !== 'POST') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Method not allowed' }))
+  }
 
   const { name, email, subject, message } = req.body ?? {}
 
   // Basic validation
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
-    return res.status(400).json({ error: 'name, email and message are required' })
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'name, email and message are required' }))
   }
 
   try {
@@ -40,9 +47,11 @@ export default async function handler(req, res) {
       VALUES (${name.trim()}, ${email.trim()}, ${subject?.trim() ?? ''}, ${message.trim()})
     `
 
-    return res.status(200).json({ success: true })
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ success: true }))
   } catch (err) {
     console.error('DB error:', err)
-    return res.status(500).json({ error: 'Failed to save message' })
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Failed to save message' }))
   }
 }
