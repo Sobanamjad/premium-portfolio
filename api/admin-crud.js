@@ -1,0 +1,90 @@
+// Helper to parse JSON body
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = ''
+    req.on('data', (chunk) => { body += chunk })
+    req.on('end', () => {
+      try { resolve(JSON.parse(body || '{}')) }
+      catch { resolve({}) }
+    })
+  })
+}
+
+// Token verification
+function verifyToken(req) {
+  const auth = req.headers['authorization'] || ''
+  const token = auth.replace('Bearer ', '').trim()
+  if (!token) return false
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf8')
+    const [username] = decoded.split(':')
+    const ADMIN_USERNAME = 'sobanamjad097'
+    return username === ADMIN_USERNAME
+  } catch {
+    return false
+  }
+}
+
+export default async function handler(req, res) {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200)
+    return res.end()
+  }
+
+  // Verify token for all admin routes
+  if (!verifyToken(req)) {
+    res.writeHead(401, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Unauthorized' }))
+  }
+
+  // Parse body for POST/PUT requests
+  if (req.method === 'POST' || req.method === 'PUT') {
+    req.body = await parseBody(req)
+  }
+
+  // Parse query params
+  const url = new URL(req.url, `http://${req.headers.host}`)
+  req.query = Object.fromEntries(url.searchParams.entries())
+
+  // Route based on path
+  const path = url.pathname
+
+  try {
+    if (path === '/api/admin/contacts') {
+      const { default: handler } = await import('./handlers/admin/contacts.js')
+      return await handler(req, res)
+    }
+    if (path === '/api/admin/skills') {
+      const { default: handler } = await import('./handlers/admin/skills.js')
+      return await handler(req, res)
+    }
+    if (path === '/api/admin/services') {
+      const { default: handler } = await import('./handlers/admin/services.js')
+      return await handler(req, res)
+    }
+    if (path === '/api/admin/projects') {
+      const { default: handler } = await import('./handlers/admin/projects.js')
+      return await handler(req, res)
+    }
+    if (path === '/api/admin/experience') {
+      const { default: handler } = await import('./handlers/admin/experience.js')
+      return await handler(req, res)
+    }
+    if (path === '/api/admin/about') {
+      const { default: handler } = await import('./handlers/admin/about.js')
+      return await handler(req, res)
+    }
+
+    res.writeHead(404, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Not found' }))
+  } catch (err) {
+    console.error('Admin CRUD API error:', err)
+    res.writeHead(500, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ error: 'Server error' }))
+  }
+}

@@ -1,8 +1,25 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/admin",    "destination": "/index.html" },
-    { "source": "/admin/",   "destination": "/index.html" },
-    { "source": "/(.*)",     "destination": "/index.html" }
+    { "source": "/api/contact", "destination": "/api/public.js" },
+    { "source": "/api/skills", "destination": "/api/public.js" },
+    { "source": "/api/services", "destination": "/api/public.js" },
+    { "source": "/api/projects", "destination": "/api/public.js" },
+    { "source": "/api/experience", "destination": "/api/public.js" },
+    { "source": "/api/about", "destination": "/api/public.js" },
+    { "source": "/api/admin/contacts", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/skills", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/services", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/projects", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/experience", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/about", "destination": "/api/admin-crud.js" },
+    { "source": "/api/admin/login", "destination": "/api/admin-system.js" },
+    { "source": "/api/admin/seed-skills", "destination": "/api/admin-system.js" },
+    { "source": "/api/admin/seed-services", "destination": "/api/admin-system.js" },
+    { "source": "/api/admin/seed-projects", "destination": "/api/admin-system.js" },
+    { "source": "/api/admin/seed-experience", "destination": "/api/admin-system.js" },
+    { "source": "/api/admin/seed-about", "destination": "/api/admin-system.js" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
