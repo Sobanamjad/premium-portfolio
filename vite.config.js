@@ -25,42 +25,42 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/contact.js')
+          const { default: handler } = await import('./api/handlers/contact.js')
           await handler(req, res)
         })
 
         server.middlewares.use('/api/skills', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
-          const { default: handler } = await import('./api/skills.js')
+          const { default: handler } = await import('./api/handlers/skills.js')
           await handler(req, res)
         })
 
         server.middlewares.use('/api/services', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
-          const { default: handler } = await import('./api/services.js')
+          const { default: handler } = await import('./api/handlers/services.js')
           await handler(req, res)
         })
 
         server.middlewares.use('/api/projects', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
-          const { default: handler } = await import('./api/projects.js')
+          const { default: handler } = await import('./api/handlers/projects.js')
           await handler(req, res)
         })
 
         server.middlewares.use('/api/experience', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
-          const { default: handler } = await import('./api/experience.js')
+          const { default: handler } = await import('./api/handlers/experience.js')
           await handler(req, res)
         })
 
         server.middlewares.use('/api/about', async (req, res) => {
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
-          const { default: handler } = await import('./api/about.js')
+          const { default: handler } = await import('./api/handlers/about.js')
           await handler(req, res)
         })
 
@@ -68,7 +68,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/login.js')
+          const { default: handler } = await import('./api/handlers/admin/login.js')
           await handler(req, res)
         })
 
@@ -78,7 +78,7 @@ export default defineConfig({
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/contacts.js')
+          const { default: handler } = await import('./api/handlers/admin/contacts.js')
           await handler(req, res)
         })
 
@@ -88,7 +88,7 @@ export default defineConfig({
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/skills.js')
+          const { default: handler } = await import('./api/handlers/admin/skills.js')
           await handler(req, res)
         })
 
@@ -98,7 +98,7 @@ export default defineConfig({
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/services.js')
+          const { default: handler } = await import('./api/handlers/admin/services.js')
           await handler(req, res)
         })
 
@@ -108,7 +108,7 @@ export default defineConfig({
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/projects.js')
+          const { default: handler } = await import('./api/handlers/admin/projects.js')
           await handler(req, res)
         })
 
@@ -118,7 +118,7 @@ export default defineConfig({
           req.body = await parseBody(req)
           const url = new URL(req.url, 'http://localhost')
           req.query = Object.fromEntries(url.searchParams.entries())
-          const { default: handler } = await import('./api/admin/experience.js')
+          const { default: handler } = await import('./api/handlers/admin/experience.js')
           await handler(req, res)
         })
 
@@ -126,7 +126,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/about.js')
+          const { default: handler } = await import('./api/handlers/admin/about.js')
           await handler(req, res)
         })
 
@@ -134,7 +134,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/seed-skills.js')
+          const { default: handler } = await import('./api/handlers/admin/seed-skills.js')
           await handler(req, res)
         })
 
@@ -142,7 +142,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/seed-services.js')
+          const { default: handler } = await import('./api/handlers/admin/seed-services.js')
           await handler(req, res)
         })
 
@@ -150,7 +150,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/seed-projects.js')
+          const { default: handler } = await import('./api/handlers/admin/seed-projects.js')
           await handler(req, res)
         })
 
@@ -158,7 +158,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/seed-experience.js')
+          const { default: handler } = await import('./api/handlers/admin/seed-experience.js')
           await handler(req, res)
         })
 
@@ -166,7 +166,7 @@ export default defineConfig({
           if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
           res.setHeader('Content-Type', 'application/json')
           req.body = await parseBody(req)
-          const { default: handler } = await import('./api/admin/seed-about.js')
+          const { default: handler } = await import('./api/handlers/admin/seed-about.js')
           await handler(req, res)
         })
       },
