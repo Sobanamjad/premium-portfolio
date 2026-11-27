@@ -71,16 +71,12 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.65 }}
           className="flex flex-wrap items-center justify-center gap-4 mt-2"
         >
-          <MagneticButton as="a" href="/soban-resume.pdf" download className="btn-glow">
+          <MagneticButton as="a" href="/soban-resume.pdf" download="Soban_Amjad_CV.pdf" className="btn-glow">
             <FiDownload /> Download Resume
           </MagneticButton>
           <MagneticButton
             as="a"
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault()
-              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-            }}
+            href="mailto:sobanamjad097@gmail.com"
             className="btn-outline"
           >
             <FiMail /> Get In Touch

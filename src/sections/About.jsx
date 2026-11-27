@@ -43,7 +43,7 @@ export default function About() {
               full-stack roles.
             </p>
 
-            <MagneticButton as="a" href="/soban-resume.pdf" download className="btn-outline mt-4">
+            <MagneticButton as="a" href="/soban-resume.pdf" download="Soban_Amjad_CV.pdf" className="btn-outline mt-4">
               <FiDownload /> Download CV
             </MagneticButton>
           </motion.div>

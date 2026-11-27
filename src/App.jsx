@@ -9,20 +9,21 @@ import Loader from './components/Loader'
 import Hero from './sections/Hero'
 import useLenis from './hooks/useLenis'
 
-// Below-the-fold sections are code-split so the hero paints as fast as possible.
-const About = lazy(() => import('./sections/About'))
-const Skills = lazy(() => import('./sections/Skills'))
-const Services = lazy(() => import('./sections/Services'))
-const Projects = lazy(() => import('./sections/Projects'))
-const Experience = lazy(() => import('./sections/Experience'))
-const Education = lazy(() => import('./sections/Education'))
+// Each section is its own lazy chunk — one slow section can't block others.
+const About        = lazy(() => import('./sections/About'))
+const Skills       = lazy(() => import('./sections/Skills'))
+const Services     = lazy(() => import('./sections/Services'))
+const Projects     = lazy(() => import('./sections/Projects'))
+const Experience   = lazy(() => import('./sections/Experience'))
+const Education    = lazy(() => import('./sections/Education'))
 const Certificates = lazy(() => import('./sections/Certificates'))
 const Testimonials = lazy(() => import('./sections/Testimonials'))
-const Contact = lazy(() => import('./sections/Contact'))
-const Footer = lazy(() => import('./sections/Footer'))
+const Contact      = lazy(() => import('./sections/Contact'))
+const Footer       = lazy(() => import('./sections/Footer'))
 
+// Minimal height-preserving fallback so layout doesn't jump
 function SectionFallback() {
-  return <div className="h-[40vh] flex items-center justify-center text-ink-faint text-sm font-mono">Loading…</div>
+  return <div className="h-[50vh]" aria-hidden />
 }
 
 export default function App() {
@@ -30,7 +31,9 @@ export default function App() {
   useLenis()
 
   useEffect(() => {
-    setLoading(false)
+    // One rAF is enough — avoids a flash on fast connections
+    const id = requestAnimationFrame(() => setLoading(false))
+    return () => cancelAnimationFrame(id)
   }, [])
 
   return (
@@ -46,21 +49,22 @@ export default function App() {
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: loading ? 0 : 1 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
       >
+        {/* Hero is eagerly loaded — first paint is instant */}
         <Hero />
-        <Suspense fallback={<SectionFallback />}>
-          <About />
-          <Skills />
-          <Services />
-          <Projects />
-          <Experience />
-          <Education />
-          <Certificates />
-          <Testimonials />
-          <Contact />
-          <Footer />
-        </Suspense>
+
+        {/* Every section is independently suspended so they load in parallel */}
+        <Suspense fallback={<SectionFallback />}><About /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Skills /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Services /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Projects /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Experience /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Education /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Certificates /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Testimonials /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Contact /></Suspense>
+        <Suspense fallback={<SectionFallback />}><Footer /></Suspense>
       </motion.main>
 
       <BackToTop />

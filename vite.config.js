@@ -5,11 +5,17 @@ export default defineConfig({
   plugins: [react()],
   build: {
     sourcemap: false,
+    // Raise the chunk-size warning threshold — icon libraries are intentionally large
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {
+          // Core React runtime — cached aggressively
           vendor: ['react', 'react-dom'],
-          motion: ['framer-motion'],
+          // Animation libs together — both needed early
+          motion: ['framer-motion', 'gsap'],
+          // Icon sets split from app code — rarely change
+          icons: ['react-icons'],
         },
       },
     },
