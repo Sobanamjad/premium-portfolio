@@ -35,27 +35,27 @@ export default async function handler(req, res) {
 
   try {
     if (path === '/api/contact') {
-      const { default: handler } = await import('./handlers/contact.js')
+      const { default: handler } = await import('../src/handlers/contact.js')
       return await handler(req, res)
     }
     if (path === '/api/skills') {
-      const { default: handler } = await import('./handlers/skills.js')
+      const { default: handler } = await import('../src/handlers/skills.js')
       return await handler(req, res)
     }
     if (path === '/api/services') {
-      const { default: handler } = await import('./handlers/services.js')
+      const { default: handler } = await import('../src/handlers/services.js')
       return await handler(req, res)
     }
     if (path === '/api/projects') {
-      const { default: handler } = await import('./handlers/projects.js')
+      const { default: handler } = await import('../src/handlers/projects.js')
       return await handler(req, res)
     }
     if (path === '/api/experience') {
-      const { default: handler } = await import('./handlers/experience.js')
+      const { default: handler } = await import('../src/handlers/experience.js')
       return await handler(req, res)
     }
     if (path === '/api/about') {
-      const { default: handler } = await import('./handlers/about.js')
+      const { default: handler } = await import('../src/handlers/about.js')
       return await handler(req, res)
     }
 

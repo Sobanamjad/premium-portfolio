@@ -36,9 +36,12 @@ export default async function handler(req, res) {
     return res.end()
   }
 
-  // Verify token for seed routes (login doesn't need token)
+  // Parse query params
   const url = new URL(req.url, `http://${req.headers.host}`)
   const path = url.pathname
+  req.query = Object.fromEntries(url.searchParams.entries())
+
+  // Verify token for seed routes (login doesn't need token)
   if (!path.includes('login') && !verifyToken(req)) {
     res.writeHead(401, { 'Content-Type': 'application/json' })
     return res.end(JSON.stringify({ error: 'Unauthorized' }))
@@ -49,34 +52,29 @@ export default async function handler(req, res) {
     req.body = await parseBody(req)
   }
 
-  // Parse query params
-  const url = new URL(req.url, `http://${req.headers.host}`)
-  req.query = Object.fromEntries(url.searchParams.entries())
-  const path = url.pathname
-
   try {
     if (path === '/api/admin/login') {
-      const { default: handler } = await import('./handlers/admin/login.js')
+      const { default: handler } = await import('../src/handlers/admin/login.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/seed-skills') {
-      const { default: handler } = await import('./handlers/admin/seed-skills.js')
+      const { default: handler } = await import('../src/handlers/admin/seed-skills.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/seed-services') {
-      const { default: handler } = await import('./handlers/admin/seed-services.js')
+      const { default: handler } = await import('../src/handlers/admin/seed-services.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/seed-projects') {
-      const { default: handler } = await import('./handlers/admin/seed-projects.js')
+      const { default: handler } = await import('../src/handlers/admin/seed-projects.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/seed-experience') {
-      const { default: handler } = await import('./handlers/admin/seed-experience.js')
+      const { default: handler } = await import('../src/handlers/admin/seed-experience.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/seed-about') {
-      const { default: handler } = await import('./handlers/admin/seed-about.js')
+      const { default: handler } = await import('../src/handlers/admin/seed-about.js')
       return await handler(req, res)
     }
 

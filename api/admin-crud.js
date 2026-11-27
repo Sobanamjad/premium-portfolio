@@ -56,27 +56,27 @@ export default async function handler(req, res) {
 
   try {
     if (path === '/api/admin/contacts') {
-      const { default: handler } = await import('./handlers/admin/contacts.js')
+      const { default: handler } = await import('../src/handlers/admin/contacts.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/skills') {
-      const { default: handler } = await import('./handlers/admin/skills.js')
+      const { default: handler } = await import('../src/handlers/admin/skills.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/services') {
-      const { default: handler } = await import('./handlers/admin/services.js')
+      const { default: handler } = await import('../src/handlers/admin/services.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/projects') {
-      const { default: handler } = await import('./handlers/admin/projects.js')
+      const { default: handler } = await import('../src/handlers/admin/projects.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/experience') {
-      const { default: handler } = await import('./handlers/admin/experience.js')
+      const { default: handler } = await import('../src/handlers/admin/experience.js')
       return await handler(req, res)
     }
     if (path === '/api/admin/about') {
-      const { default: handler } = await import('./handlers/admin/about.js')
+      const { default: handler } = await import('../src/handlers/admin/about.js')
       return await handler(req, res)
     }
 
