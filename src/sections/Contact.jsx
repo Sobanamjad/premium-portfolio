@@ -43,6 +43,20 @@ export default function Contact() {
 
     setStatus('loading')
     try {
+      // 1️⃣ Save to Neon DB
+      const dbRes = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:    form.name,
+          email:   form.email,
+          subject: form.subject || 'No subject',
+          message: form.message,
+        }),
+      })
+      if (!dbRes.ok) throw new Error('DB save failed')
+
+      // 2️⃣ Send email via EmailJS
       await emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
@@ -59,7 +73,7 @@ export default function Contact() {
       setForm(initialForm)
       setTimeout(() => setStatus('idle'), 5000)
     } catch (err) {
-      console.error('EmailJS error:', err)
+      console.error('Submit error:', err)
       setStatus('error')
       setTimeout(() => setStatus('idle'), 5000)
     }

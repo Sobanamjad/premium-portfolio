@@ -1,21 +1,67 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Helper: parse JSON body from an incoming Node request
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = ''
+    req.on('data', (chunk) => { body += chunk })
+    req.on('end', () => {
+      try { resolve(JSON.parse(body || '{}')) }
+      catch { resolve({}) }
+    })
+  })
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'api-dev-server',
+      configureServer(server) {
+
+        // POST /api/contact
+        server.middlewares.use('/api/contact', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/contact.js?t=' + Date.now())
+          await handler(req, res)
+        })
+
+        // POST /api/admin/login
+        server.middlewares.use('/api/admin/login', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          const { default: handler } = await import('./api/admin/login.js?t=' + Date.now())
+          await handler(req, res)
+        })
+
+        // GET/DELETE /api/admin/contacts
+        server.middlewares.use('/api/admin/contacts', async (req, res) => {
+          if (req.method === 'OPTIONS') { res.writeHead(200); return res.end() }
+          res.setHeader('Content-Type', 'application/json')
+          req.body = await parseBody(req)
+          // Parse query string for DELETE ?id=x
+          const url = new URL(req.url, 'http://localhost')
+          req.query = Object.fromEntries(url.searchParams.entries())
+          const { default: handler } = await import('./api/admin/contacts.js?t=' + Date.now())
+          await handler(req, res)
+        })
+      },
+    },
+  ],
+
   build: {
     sourcemap: false,
-    // Raise the chunk-size warning threshold — icon libraries are intentionally large
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {
-          // Core React runtime — cached aggressively
           vendor: ['react', 'react-dom'],
-          // Animation libs together — both needed early
           motion: ['framer-motion', 'gsap'],
-          // Icon sets split from app code — rarely change
-          icons: ['react-icons'],
+          icons:  ['react-icons'],
         },
       },
     },
