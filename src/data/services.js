@@ -11,7 +11,11 @@ const iconMap = {
 }
 
 export const getServiceIcon = (title) => {
-  return iconMap[title] || FiCode
+  // Try exact match first
+  if (iconMap[title]) return iconMap[title]
+  // Try case-insensitive match
+  const key = Object.keys(iconMap).find(k => k.toLowerCase() === title.toLowerCase())
+  return key ? iconMap[key] : FiCode
 }
 
 // Fetch services from API

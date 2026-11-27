@@ -6,6 +6,18 @@ import p4 from '../assets/p4.png'
 
 export const projectCategories = ['All', 'Full-Stack', 'Frontend', 'Mobile', 'Open Source', 'Data & ML']
 
+// Fetch projects from API
+export async function fetchProjects() {
+  try {
+    const res = await fetch('/api/projects')
+    const data = await res.json()
+    return data.projects || []
+  } catch (err) {
+    console.error('Failed to fetch projects:', err)
+    return []
+  }
+}
+
 export const projects = [
   {
     id: 1,

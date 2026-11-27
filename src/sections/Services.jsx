@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiChevronDown } from 'react-icons/fi'
+import { FiChevronDown, FiCode } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
 import TiltCard from '../components/TiltCard'
@@ -12,13 +12,18 @@ export default function Services() {
 
   useEffect(() => {
     fetchServices().then(data => {
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         setServicesData(data.map(s => ({ ...s, icon: getServiceIcon(s.title) })))
       }
+    }).catch(err => {
+      console.error('Error fetching services:', err)
     })
   }, [])
 
   const displayServices = servicesData.length > 0 ? servicesData : services
+
+  // Debug: log services data
+  console.log('Services data:', displayServices)
 
   return (
     <section id="services" className="section-pad relative">
@@ -30,8 +35,10 @@ export default function Services() {
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayServices.map(({ id, icon: Icon, title, description, features }, i) => {
+          {displayServices.map((service, i) => {
+            const { id, icon: Icon, title, description, features = [] } = service
             const isOpen = expanded === id
+            const ServiceIcon = typeof Icon === 'function' ? Icon : FiCode
             return (
               <motion.div
                 key={id}
@@ -48,7 +55,7 @@ export default function Services() {
                     data-cursor="link"
                   >
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet/20 to-cyan/20 flex items-center justify-center text-violet-soft text-xl mb-5">
-                      <Icon />
+                      <ServiceIcon />
                     </div>
                     <h3 className="font-display text-xl text-ink font-medium mb-2">{title}</h3>
                     <p className="text-ink-muted text-sm leading-relaxed">{description}</p>

@@ -7,6 +7,8 @@ import {
 } from 'react-icons/fi'
 import SkillsManager from './SkillsManager'
 import ServicesManager from './ServicesManager'
+import ProjectsManager from './ProjectsManager'
+import ExperienceManager from './ExperienceManager'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleString('en-US', {
@@ -20,6 +22,8 @@ export default function AdminDashboard({ token, onLogout }) {
   const [contacts, setContacts] = useState([])
   const [skills, setSkills] = useState([])
   const [services, setServices] = useState([])
+  const [projects, setProjects] = useState([])
+  const [experience, setExperience] = useState([])
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
   const [search, setSearch]     = useState('')
@@ -86,10 +90,50 @@ export default function AdminDashboard({ token, onLogout }) {
     }
   }
 
+  const fetchProjects = async (silent = false) => {
+    if (!silent) setLoading(true)
+    else setRefreshing(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/projects', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401) { onLogout(); return }
+      const data = await res.json()
+      setProjects(data.projects || [])
+    } catch {
+      setError('Failed to load projects.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  const fetchExperience = async (silent = false) => {
+    if (!silent) setLoading(true)
+    else setRefreshing(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/experience', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401) { onLogout(); return }
+      const data = await res.json()
+      setExperience(data.experience || [])
+    } catch {
+      setError('Failed to load experience.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
   useEffect(() => {
     if (activeTab === 'contacts') fetchContacts()
     else if (activeTab === 'skills') fetchSkills()
     else if (activeTab === 'services') fetchServices()
+    else if (activeTab === 'projects') fetchProjects()
+    else if (activeTab === 'experience') fetchExperience()
   }, [activeTab])
 
   const handleDelete = async (id) => {
@@ -222,6 +266,136 @@ export default function AdminDashboard({ token, onLogout }) {
     }
   }
 
+  const handleAddProject = async (project) => {
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(project),
+      })
+      if (res.ok) {
+        fetchProjects(true)
+      }
+    } catch {
+      alert('Failed to add project.')
+    }
+  }
+
+  const handleEditProject = async (project) => {
+    try {
+      const res = await fetch('/api/admin/projects', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(project),
+      })
+      if (res.ok) {
+        fetchProjects(true)
+      }
+    } catch {
+      alert('Failed to update project.')
+    }
+  }
+
+  const handleDeleteProject = async (id) => {
+    if (!window.confirm('Delete this project?')) return
+    try {
+      const res = await fetch(`/api/admin/projects?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setProjects(p => p.filter(x => x.id !== id))
+    } catch {
+      alert('Delete failed.')
+    }
+  }
+
+  const handleAddExperience = async (exp) => {
+    try {
+      const res = await fetch('/api/admin/experience', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(exp),
+      })
+      if (res.ok) {
+        fetchExperience(true)
+      }
+    } catch {
+      alert('Failed to add experience.')
+    }
+  }
+
+  const handleEditExperience = async (exp) => {
+    try {
+      const res = await fetch('/api/admin/experience', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(exp),
+      })
+      if (res.ok) {
+        fetchExperience(true)
+      }
+    } catch {
+      alert('Failed to update experience.')
+    }
+  }
+
+  const handleDeleteExperience = async (id) => {
+    if (!window.confirm('Delete this experience?')) return
+    try {
+      const res = await fetch(`/api/admin/experience?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setExperience(e => e.filter(x => x.id !== id))
+    } catch {
+      alert('Delete failed.')
+    }
+  }
+
+  const handleSeedProjects = async () => {
+    try {
+      const res = await fetch('/api/admin/seed-projects', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message)
+        fetchProjects(true)
+      }
+    } catch {
+      alert('Failed to seed projects.')
+    }
+  }
+
+  const handleSeedExperience = async () => {
+    try {
+      const res = await fetch('/api/admin/seed-experience', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message)
+        fetchExperience(true)
+      }
+    } catch {
+      alert('Failed to seed experience.')
+    }
+  }
+
   const filtered = contacts.filter(c =>
     [c.name, c.email, c.subject, c.message]
       .join(' ').toLowerCase()
@@ -291,6 +465,26 @@ export default function AdminDashboard({ token, onLogout }) {
               }`}
             >
               Services
+            </button>
+            <button
+              onClick={() => setActiveTab('projects')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'projects'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => setActiveTab('experience')}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'experience'
+                  ? 'border-gray-900 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Experience
             </button>
           </div>
         </div>
@@ -487,6 +681,32 @@ export default function AdminDashboard({ token, onLogout }) {
             onAdd={handleAddService}
             onEdit={handleEditService}
             onDelete={handleDeleteService}
+          />
+        )}
+
+        {activeTab === 'projects' && (
+          <ProjectsManager
+            projects={projects}
+            loading={loading}
+            error={error}
+            onRefresh={() => fetchProjects(true)}
+            onAdd={handleAddProject}
+            onEdit={handleEditProject}
+            onDelete={handleDeleteProject}
+            onSeed={handleSeedProjects}
+          />
+        )}
+
+        {activeTab === 'experience' && (
+          <ExperienceManager
+            experience={experience}
+            loading={loading}
+            error={error}
+            onRefresh={() => fetchExperience(true)}
+            onAdd={handleAddExperience}
+            onEdit={handleEditExperience}
+            onDelete={handleDeleteExperience}
+            onSeed={handleSeedExperience}
           />
         )}
       </main>

@@ -1,27 +1,38 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiSearch } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import ProjectCard from '../components/ProjectCard'
 import MagneticButton from '../components/MagneticButton'
-import { projects, projectCategories } from '../data/projects'
+import { projects, projectCategories, fetchProjects } from '../data/projects'
 
 const PAGE_SIZE = 6
 
 export default function Projects() {
+  const [projectsData, setProjectsData] = useState([])
   const [category, setCategory] = useState('All')
   const [query, setQuery] = useState('')
   const [visible, setVisible] = useState(PAGE_SIZE)
 
+  useEffect(() => {
+    fetchProjects().then(data => {
+      if (data.length > 0) {
+        setProjectsData(data)
+      }
+    })
+  }, [])
+
+  const displayProjects = projectsData.length > 0 ? projectsData : projects
+
   const filtered = useMemo(() => {
-    return projects.filter((p) => {
+    return displayProjects.filter((p) => {
       const matchesCategory = category === 'All' || p.category === category
       const matchesQuery =
         p.title.toLowerCase().includes(query.trim().toLowerCase()) ||
         p.tech.some((t) => t.toLowerCase().includes(query.trim().toLowerCase()))
       return matchesCategory && matchesQuery
     })
-  }, [category, query])
+  }, [category, query, displayProjects])
 
   const visibleProjects = filtered.slice(0, visible)
 

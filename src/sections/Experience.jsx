@@ -1,10 +1,23 @@
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { FiBriefcase, FiMapPin } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
-import { experience } from '../data/experience'
+import { experience, fetchExperience } from '../data/experience'
 
 export default function Experience() {
+  const [experienceData, setExperienceData] = useState([])
+
+  useEffect(() => {
+    fetchExperience().then(data => {
+      if (data.length > 0) {
+        setExperienceData(data)
+      }
+    })
+  }, [])
+
+  const displayExperience = experienceData.length > 0 ? experienceData : experience
+
   return (
     <section id="experience" className="section-pad relative">
       <div className="container-max">
@@ -18,7 +31,7 @@ export default function Experience() {
           <div className="absolute left-[18px] sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-violet/60 via-cyan/40 to-transparent sm:-translate-x-1/2" />
 
           <div className="space-y-10">
-            {experience.map((item, i) => {
+            {displayExperience.map((item, i) => {
               const alignRight = i % 2 === 1
               return (
                 <motion.div

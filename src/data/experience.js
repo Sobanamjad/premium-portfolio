@@ -1,3 +1,15 @@
+// Fetch experience from API
+export async function fetchExperience() {
+  try {
+    const res = await fetch('/api/experience')
+    const data = await res.json()
+    return data.experience || []
+  } catch (err) {
+    console.error('Failed to fetch experience:', err)
+    return []
+  }
+}
+
 export const experience = [
   {
     id: 1,
