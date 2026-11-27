@@ -7,6 +7,7 @@ export default function ProjectsManager({ projects, loading, error, onRefresh, o
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
+  const [imagePreview, setImagePreview] = useState('')
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -55,6 +56,7 @@ export default function ProjectsManager({ projects, loading, error, onRefresh, o
         featured: project.featured,
         year: project.year
       })
+      setImagePreview(project.image)
     } else {
       setEditingProject(null)
       setFormData({
@@ -69,6 +71,7 @@ export default function ProjectsManager({ projects, loading, error, onRefresh, o
         featured: false,
         year: new Date().getFullYear()
       })
+      setImagePreview('')
     }
     setIsModalOpen(true)
   }
@@ -88,6 +91,20 @@ export default function ProjectsManager({ projects, loading, error, onRefresh, o
       featured: false,
       year: new Date().getFullYear()
     })
+    setImagePreview('')
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64 = reader.result
+        setFormData({ ...formData, image: base64 })
+        setImagePreview(base64)
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   return (
@@ -295,15 +312,53 @@ export default function ProjectsManager({ projects, loading, error, onRefresh, o
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">Image URL</label>
-                  <input
-                    type="url"
-                    value={formData.image}
-                    onChange={e => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition-all"
-                    required
-                  />
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">Project Image</label>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <label className="flex-1 cursor-pointer">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        <div className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-600 text-center hover:bg-gray-100 transition-all">
+                          📁 Upload Image
+                        </div>
+                      </label>
+                      <div className="flex-1">
+                        <input
+                          type="url"
+                          value={formData.image}
+                          onChange={e => {
+                            setFormData({ ...formData, image: e.target.value })
+                            setImagePreview(e.target.value)
+                          }}
+                          placeholder="Or paste image URL"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition-all"
+                        />
+                      </div>
+                    </div>
+                    {imagePreview && (
+                      <div className="relative aspect-video rounded-xl overflow-hidden border border-gray-200">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({ ...formData, image: '' })
+                            setImagePreview('')
+                          }}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg hover:bg-red-600 transition-all"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div>

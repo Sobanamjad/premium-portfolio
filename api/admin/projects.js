@@ -21,6 +21,12 @@ async function ensureTable() {
       updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `
+  // Check if we need to alter the table for larger image field
+  try {
+    await sql`ALTER TABLE projects ALTER COLUMN image TYPE TEXT`
+  } catch (e) {
+    // Column already has correct type or table doesn't exist yet
+  }
 }
 
 function verifyToken(req) {
