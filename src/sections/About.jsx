@@ -1,4 +1,5 @@
-import { motion, useEffect, useState } from 'framer-motion'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { FiDownload, FiBriefcase, FiCode, FiUsers, FiAward } from 'react-icons/fi'
 import SectionHeading from '../components/SectionHeading'
 import GlassCard from '../components/GlassCard'
